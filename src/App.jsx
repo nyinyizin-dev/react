@@ -1,15 +1,17 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
-
-import Item from './Item'
+import { useState, useRef } from "react";
+import Item from "./Item";
 
 function List(props) {
-  return <ul style={{listStyle: 'none',padding: 20, backgroundColor: '#ddf'}}>
-    {props.children}
-  </ul>
+  return (
+    <ul style={{ listStyle: "none", padding: 20, backgroundColor: "#ddf" }}>
+      {props.children}
+    </ul>
+  );
 }
 
 export default function App() {
+  const inputRef = useRef();
   const [data, setData] = useState([
     { id: 4, name: "Apple", done: true },
     { id: 3, name: "Orange", done: true },
@@ -17,19 +19,31 @@ export default function App() {
     { id: 1, name: "Banana", done: false },
   ]);
 
-  const add = (name) => {
+  const add = () => {
     const id = data[0].id + 1;
-    setData([{ id, name: "New Item", done: false }, ...data]);
+    const name = inputRef.current.value;
+    if (name == "") return false;
+
+    setData([{ id, name, done: false }, ...data]);
   };
 
-  const remove = id => {
-    setData(data.filter(item => item.id != id))
-  }
+  const remove = (id) => {
+    setData(data.filter((item) => item.id != id));
+  };
 
   return (
     <div>
       <h1>Hello React ({data.length})</h1>
-      <button onClick={add}>Add</button>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          add();
+          e.currentTarget.reset();
+        }}
+      >
+        <input type="text" ref={inputRef} />
+        <button type="submit">Add</button>
+      </form>
 
       <List>
         {data.map((item) => {
