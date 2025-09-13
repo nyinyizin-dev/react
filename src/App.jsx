@@ -14,8 +14,9 @@ export default function App() {
   ]);
 
   const add = (name) => {
-    const id = data[0].id + 1;
     if (name == "") return false;
+    const maxId = Math.max(0, ...data.map((item) => item.id));
+    const id = data[0].id + 1;
 
     setData([{ id, name, done: false }, ...data]);
   };
