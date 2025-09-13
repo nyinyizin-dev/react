@@ -1,13 +1,12 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
 
-function Item({ item, remove }) {
-  return (
-    <li> 
-      {item.name}  {" "}{" "}
-       <button onClick={()=>remove(item.id)}>remove</button>
-    </li>
-  );
+import Item from './Item'
+
+function List(props) {
+  return <ul style={{listStyle: 'none',padding: 20, backgroundColor: '#ddf'}}>
+    {props.children}
+  </ul>
 }
 
 export default function App() {
@@ -32,11 +31,11 @@ export default function App() {
       <h1>Hello React ({data.length})</h1>
       <button onClick={add}>Add</button>
 
-      <ul>
+      <List>
         {data.map((item) => {
           return <Item item={item} key={item.id} remove={remove} />;
         })}
-      </ul>
+      </List>
     </div>
   );
 }
