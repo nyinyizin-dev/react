@@ -1,42 +1,75 @@
-/* eslint-disable react/prop-types */
 import { useState } from "react";
 
-function Item({ item, remove }) {
-  return (
-    <li> 
-      {item.name}  {" "}{" "}
-       <button onClick={()=>remove(item.id)}>remove</button>
-    </li>
-  );
-}
+import Item from "./Item";
+import Header from "./Header";
+import Form from "./Form";
+
+import { Container, Divider, List } from "@mui/material";
 
 export default function App() {
   const [data, setData] = useState([
-    { id: 4, name: "Apple", done: true },
-    { id: 3, name: "Orange", done: true },
-    { id: 2, name: "Mango", done: false },
-    { id: 1, name: "Banana", done: false },
+    { id: 3, name: "Egg", done: true },
+    { id: 2, name: "Bread", done: false },
+    { id: 1, name: "Butter", done: false },
   ]);
 
   const add = (name) => {
+    if (name == "") return false;
+    const maxId = Math.max(0, ...data.map((item) => item.id));
     const id = data[0].id + 1;
-    setData([{ id, name: "New Item", done: false }, ...data]);
+
+    setData([{ id, name, done: false }, ...data]);
   };
 
-  const remove = id => {
-    setData(data.filter(item => item.id != id))
-  }
+  const toggle = (id) => {
+    setData(
+      data.map((item) => {
+        if (item.id == id) item.done = !item.done;
+        return item;
+      })
+    );
+  };
+
+  const remove = (id) => {
+    setData(data.filter((item) => item.id != id));
+  };
 
   return (
     <div>
-      <h1>Hello React ({data.length})</h1>
-      <button onClick={add}>Add</button>
+      <Header />
+      <Container maxWidth="sm" sx={{ mt: 4 }}>
+        <Form add={add} />
 
-      <ul>
-        {data.map((item) => {
-          return <Item item={item} key={item.id} remove={remove} />;
-        })}
-      </ul>
+        <List>
+          {data
+            .filter((item) => item.done == false)
+            .map((item) => {
+              return (
+                <Item
+                  key={item.id}
+                  item={item}
+                  remove={remove}
+                  toggle={toggle}
+                />
+              );
+            })}
+        </List>
+        <Divider />
+        <List>
+          {data
+            .filter((item) => item.done == true)
+            .map((item) => {
+              return (
+                <Item
+                  key={item.id}
+                  item={item}
+                  remove={remove}
+                  toggle={toggle}
+                />
+              );
+            })}
+        </List>
+      </Container>
     </div>
   );
 }
