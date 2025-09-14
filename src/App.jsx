@@ -16,7 +16,8 @@ export default function App() {
   const add = (name) => {
     if (name == "") return false;
     const maxId = Math.max(0, ...data.map((item) => item.id));
-    const id = data[0].id + 1;
+    const id = maxId + 1;
+    // const id = data[0].id + 1;
 
     setData([{ id, name, done: false }, ...data]);
   };
@@ -36,7 +37,7 @@ export default function App() {
 
   return (
     <div>
-      <Header />
+      <Header count={data.filter(item => !item.done).length} />
       <Container maxWidth="sm" sx={{ mt: 4 }}>
         <Form add={add} />
 
